@@ -1,74 +1,116 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { generalImages, Icons } from '@/assets/images'
+import HomeComponent from '@/components/HomeComponent'
+import RecommendComponent from '@/components/RecommendComponent'
+import LocationComponent from '@/components/LocationComponent'
+import { colors } from '@/utils/colors'
+import { homeArray, RecommendArray } from '@/utils/data'
+import { vh, vw } from '@/utils/dimensions'
+import { AntDesign, Feather, FontAwesome5, Ionicons } from '@expo/vector-icons'
+import { View, Text, FlatList, Image, StyleSheet, ScrollView, TextInput } from 'react-native'
+import SearchInput from '@/components/SearchInput'
+import { useUser } from '@/context'
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const HomeScreen = () => {
+    const {  userData } = useUser();
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+ 
+    return (
+        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+            <View style={styles.headerContainer}>
+                <View >
+
+                    <Text style={styles.locationText}>Location</Text>
+                    <View style={styles.locationContainer}>
+                        <FontAwesome5 name="map-marker-alt" size={15} color={colors.blue} />
+                        <Text style={styles.bengaluruText}>Bengaluru</Text>
+                        <AntDesign name="down" size={15} color={colors.black} />
+                    </View>
+                </View>
+                
+                <Ionicons onPress={userData} name="notifications-circle" size={24} color={colors.black} />
+            </View>
+
+           <SearchInput/>
+
+            <FlatList
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                key={"homeArray"}
+                data={homeArray}
+                renderItem={HomeComponent}
+            />
+
+            <View style={styles.headingContainer}>
+                <Text style={styles.restaurantText}>Recommendation</Text>
+                <Text style={styles.seeAllText}>See All</Text>
+            </View>
+
+            <FlatList
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                key={"RecommendArray"}
+                data={RecommendArray}
+                renderItem={RecommendComponent}
+            />
+              <View style={styles.headingContainer}>
+                <Text style={styles.restaurantText}>Nearby your location</Text>
+              
+            </View>
+            <FlatList
+                key={"locationArray"}
+                data={RecommendArray}
+                renderItem={LocationComponent}
+                contentContainerStyle={{ marginBottom: vh * 2 }}
+            />
+        </ScrollView>
+    )
 }
-
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+    container: {
+        flex: 1,
+        backgroundColor: colors.white,
+        paddingHorizontal: vw * 4,
+        paddingVertical: vh * 2
+    },
+    restaurantText: {
+        fontSize: 20,
+        fontFamily: "Inter-Bold"
+    },
+    seeAllText: {
+        color: colors.blue,
+        fontFamily: "Inter-Medium",
+        fontSize: 12
+
+    },
+    headingContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginVertical: vh * 2
+    },
+    locationContainer: {
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    locationText: {
+        color: colors.lightBlack,
+        fontSize: 12,
+        marginBottom: 4
+    },
+    bengaluruText: {
+        color: colors.black,
+        fontSize: 12,
+        paddingHorizontal: vw * 1
+    },
+    headerContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: vh * 2
+    },
+    
+
+
+})
+export default HomeScreen
+
+
